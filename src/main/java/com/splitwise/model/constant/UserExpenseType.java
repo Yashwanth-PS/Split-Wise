@@ -1,4 +1,4 @@
-package com.Project.Splitwise.Models.Enum;
+package com.splitwise.model.constant;
 
 public enum UserExpenseType {
     PAID,
