@@ -4,12 +4,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@Setter
 @Getter
+@Setter
 public class GetUserResponseDTO {
-    private  Long userId;
+    private Long userId;
     private String userName;
-    private  String  phone;
+    private String phone;
     private ResponseStatus responseStatus;
     private String message;
 }
