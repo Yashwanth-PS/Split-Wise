@@ -1,65 +1,63 @@
 package com.splitwise.command;
 
+import com.splitwise.controller.GroupController;
+import com.splitwise.dto.SettleGroupRequestDTO;
+import com.splitwise.dto.SettleGroupResponseDTO;
+import com.splitwise.model.Transaction;
+import com.splitwise.model.constant.ResponseStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-//	settleGroup <<groupId>>  two paramaters in it
+// SettleGroup(groupId) will have two parameters in it
+// First it will create the Object of Group Controller
+// Then it will create the Object of Settle Group Command
 
-@Component  //  first it will create the  oject of groupcontroller  and  it will create the object of Settlegroupcommand
-public class SettleGroupCommand implements  Command{
+@Slf4j
+@Component
+public class SettleGroupCommand implements Command {
 
-    private GroupController groupController;
+    private final GroupController groupController;
 
-
-    @Autowired    //@repository @serice  @restcontroller  @component  at application  start spring will create one  object
-    public  SettleGroupCommand(GroupController groupController){ // what ever  object  created in the  groupcontroller will be passed over  here  by spring  Dependency injection( topoogical sort
+    @Autowired
+    // @Repository, @Service, @RestController, @Component - When the Application starts Spring will create a Bean
+    public SettleGroupCommand(GroupController groupController) { // The Group Controller Bean would be Injected here by Spring Dependency Injection
         this.groupController = groupController;
-
     }
+
     @Override
     public boolean canExecute(String input) {
-        if  (!input.startsWith("settleGroup")){
-            return  false;
-        }
-        if  (input.split(" ").length!=2){
+        if (!input.startsWith("settleGroup") || (input.split(" ").length != 2)) {
             return false;
         }
-        String[] arr  = input.split(" ");
+        String[] arr = input.split(" ");
         try {
-            long  groupId = Long.parseLong(arr[1]);
-        }
-        catch (NumberFormatException numberFormatException){
+            long groupId = Long.parseLong(arr[1]);
+        } catch (NumberFormatException numberFormatException) {
             return false;
-
         }
-        return  true;
+        return true;
     }
 
     @Override
     public void execute(String input) {
-        //which object do we create here
-
-//        we will create  settleGroupRequestDto and  GroupController
-        // requestDto
-        //controller
-
-        String [] arr = input.split(" ");
-        long  groupId  = Long.parseLong(arr[1]);
-        SettleGroupRequestDto  requestDto = new SettleGroupRequestDto();
-        requestDto.setGroupId(groupId);
-        SettleGroupResponseDto  responseDto = groupController.settleGroup(requestDto);
-
-        if (responseDto.getResponseStatus() == ResponseStatus.SUCCESS){
-            List<Transaction>  transactions = responseDto.getTransactions();
-            for(Transaction transaction :transactions){
-                System.out.println(transaction);
+        // Which Object do we create here?
+        // We will create settleGroupRequestDTO and call GroupController
+        // By passing the requestDTO to the Controller
+        String[] arr = input.split(" ");
+        long groupId = Long.parseLong(arr[1]);
+        SettleGroupRequestDTO requestDTO = new SettleGroupRequestDTO();
+        requestDTO.setGroupId(groupId);
+        SettleGroupResponseDTO responseDTO = groupController.settleGroup(requestDTO);
+        if (responseDTO.getResponseStatus() == ResponseStatus.SUCCESS) {
+            List<Transaction> transactions = responseDTO.getTransactions();
+            for (Transaction transaction : transactions) {
+                log.info(String.valueOf(transaction));
             }
+        } else {
+            log.info("Group Settlement Failed " + responseDTO.getMessage());
         }
-        else {
-            System.out.println("settle group failed  with mesage= "+ responseDto.getMessage());
-        }
-
     }
 }
