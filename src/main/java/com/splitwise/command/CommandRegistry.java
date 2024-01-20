@@ -8,7 +8,7 @@ import java.util.List;
 
 @Component
 public class CommandRegistry {
-    private List<Command> registeredCommand = new ArrayList<>();
+    private final List<Command> registeredCommand = new ArrayList<>();
 
     /* @Autowired
     private GetUserCommand getUserCommand; // It is also possible to autowire the Individual Component */
