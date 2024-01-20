@@ -5,9 +5,11 @@ import com.splitwise.model.Expense;
 import com.splitwise.model.User;
 import com.splitwise.model.UserExpense;
 import com.splitwise.model.constant.UserExpenseType;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 
+@Slf4j
 public class HeapBasedSettleUpStrategy implements SettleUpStrategy {
     @Override
     public List<TransactionDTO> settleUp(List<Expense> expenses) {
@@ -32,7 +34,7 @@ public class HeapBasedSettleUpStrategy implements SettleUpStrategy {
             } else if (entry.getValue() > 0) {
                 maxHeap.add(entry);
             } else {
-                System.out.println(entry.getKey().getName() + " is already settled, no need to be part of transactions");
+                log.info(entry.getKey().getName() + " is already settled, no need to be part of transactions");
             }
         }
         while (!minHeap.isEmpty()) {
@@ -51,7 +53,7 @@ public class HeapBasedSettleUpStrategy implements SettleUpStrategy {
                 maxPaid.setValue(outStanding);
                 maxHeap.add(maxPaid);
             } else {
-                System.out.println("Settled");
+                log.info("Settled");
             }
         }
         return transactionList;
