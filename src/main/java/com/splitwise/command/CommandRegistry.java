@@ -6,8 +6,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-// Inorder to make all the commands available here, we can add the collection of all the commands
-
 @Component
 public class CommandRegistry {
     private List<Command> registeredCommand = new ArrayList<>();
@@ -15,7 +13,7 @@ public class CommandRegistry {
     /* @Autowired
     private GetUserCommand getUserCommand; // It is also possible to autowire the Individual Component */
 
-    @Autowired
+    @Autowired // Inorder to make all the commands available here, we can add the collection of all the commands
     public CommandRegistry(GetUserCommand getUserCommand, RegisterUserCommand registerUserCommand, SettleGroupCommand settleGroupCommand) {
         registeredCommand.add(getUserCommand);
         registeredCommand.add(registerUserCommand);
