@@ -33,9 +33,9 @@ public class RegisterUserCommand implements Command {
         RegisterUserResponseDTO responseDTO = userController.registerUser(requestDTO);
 
         if (responseDTO.getResponseStatus() == ResponseStatus.SUCCESS) {
-            log.info("user created  with  id" + responseDTO.getUserId());
+            log.info("User Created with Id: " + responseDTO.getUserId());
         } else {
-            log.info("getUser  failed  with message= " + responseDTO.getMessage());
+            log.info("Failed to Register the User: " + responseDTO.getMessage());
         }
     }
 }
