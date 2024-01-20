@@ -1,86 +1,86 @@
 package com.splitwise.controller;
 
+import com.splitwise.dto.GetUserResponseDTO;
+import com.splitwise.dto.RegisterUserRequestDTO;
+import com.splitwise.dto.RegisterUserResponseDTO;
+import com.splitwise.model.User;
+import com.splitwise.model.constant.ResponseStatus;
+import com.splitwise.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+/* 5 steps to enhance the Spring Boot application:
+- Include the Spring Boot Starter Web dependency from the Maven Repository.
+- Update the project's POM file and refresh Maven to download the necessary dependencies.
+- Modify the controller to a RestController, enabling it to handle HTTP POST and GET requests.
+- Update methods with @GetMapping or @PostMapping annotations. For example, use @PostMapping
+  for registering a user and @GetMapping for retrieving user data.
+- Understand how to retrieve data. For HTTP requests, you can utilize Request DTOs
+  (Data Transfer Objects). In HTTP, data can be sent either in the message body or as headers.
+  Use the @RequestBody annotation to handle data sent in the message body. */
 
-// 5 step
-//maven  Repository for spring boot starter Web
-// update  pom and  refresh maven  to download
-// change controller  to restController  makes capable of  recieving the  Http post and  get
-// update methods  with  get or  post mapping     1) register user  is post menthod   2) get user is get method
-// how to get data // where  tp get  request DTO  for that we need  to say something http is a protocol which has many method  post method and  get method   but  it can send data in two methods  you can send message as body or  header  @RequestBody
-
-//@Controller
+// @Controller
 
 @RestController
 public class UserController {
-    private UserService userService;
-
+    private final UserService userService;
 
     @Autowired
-    public  UserController(UserService userService){
-        this.userService= userService;
-    }
-//    if i would send the  data in param  then  @RequestParam will be userd
-    @PostMapping("user/register/") //sending the  data
-    public RegisterUserResponseDto registerUser( @RequestBody() RegisterUserRequestDto requestDto){
-        RegisterUserResponseDto  responseDto  = new RegisterUserResponseDto();
-        try {
-            User user  = new User();
-            user.setUserName(requestDto.getUserName());
-            user.setPhone(requestDto.getPhone());
-            user.setPassword(requestDto.getPassword());
-
-            User  savedUser  =  userService.registerUser(user);
-            responseDto.setUserId(savedUser.getId());
-            responseDto.setResponseStatus(ResponseStatus.SUCCESS);
-            responseDto.setMessage("User  created  Success");
-
-        }catch (Exception ex){
-            responseDto.setResponseStatus(ResponseStatus.FAILURE);
-            responseDto.setMessage(ex.getMessage());
-
-
-        }
-
-        return  responseDto;
-
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-//    @PostMapping("/user/get/")
-//public GetUserResponseDto getUser(@RequestBody GetUserRequestDto requestDto){
-//GetUserResponseDto  responseDto  = new GetUserResponseDto ();
-//        try {
-//        User user  = userService.getUser(requestDto.getUserId());
-//        responseDto.setResponseStatus(ResponseStatus.SUCCESS);
-//        responseDto.setMessage("User retrived successfully");
-//        responseDto.setUserName(user.getUserName());
-//        responseDto.setUserId(user.getId());
-//        responseDto.setPhone(user.getPhone());
-//    public GetUserResponseDto getUser(GetUserRequestDto requestDto){ before  using the  post request
-
-
-   //using  the  get and  request param
-    @GetMapping("/user/get/")
-    public GetUserResponseDto getUser(@RequestParam() Long userId){
-        GetUserResponseDto  responseDto  = new GetUserResponseDto ();
+    @PostMapping("user/register/") // If we are sending the data in path then @RequestParam will be used
+    public RegisterUserResponseDTO registerUser(@RequestBody() RegisterUserRequestDTO requestDTO) {
+        RegisterUserResponseDTO responseDTO = new RegisterUserResponseDTO();
         try {
-             User user  = userService.getUser(userId);
-             responseDto.setResponseStatus(ResponseStatus.SUCCESS);
-             responseDto.setMessage("User retrived successfully");
-             responseDto.setUserName(user.getUserName());
-             responseDto.setUserId(user.getId());
-             responseDto.setPhone(user.getPhone());
-
-
-        }catch (Exception ex){
-            responseDto.setResponseStatus(ResponseStatus.FAILURE);
-            responseDto.setMessage(ex.getMessage());
-
+            User user = new User();
+            user.setName(requestDTO.getUserName());
+            user.setPhoneNumber(requestDTO.getPhone());
+            user.setPassword(requestDTO.getPassword());
+            User savedUser = userService.registerUser(user);
+            responseDTO.setUserId(savedUser.getId());
+            responseDTO.setResponseStatus(ResponseStatus.SUCCESS);
+            responseDTO.setMessage("Successfully Created the User");
+        } catch (Exception ex) {
+            responseDTO.setResponseStatus(ResponseStatus.FAILURE);
+            responseDTO.setMessage(ex.getMessage());
         }
-        return  responseDto;
+        return responseDTO;
+    }
 
+    /* @PostMapping("/user/get/")
+    // public GetUserResponseDTO getUser(GetUserRequestDTO requestDTO) { // Before using the Post Request
+    public GetUserResponseDTO getUser(@RequestBody GetUserRequestDTO requestDto) {
+        GetUserResponseDTO responseDTO = new GetUserResponseDTO();
+        try {
+            User user = userService.getUser(requestDto.getUserId());
+            responseDTO.setResponseStatus(ResponseStatus.SUCCESS);
+            responseDTO.setMessage("User Retrieved Successfully");
+            responseDTO.setUserName(user.getName());
+            responseDTO.setUserId(user.getId());
+            responseDTO.setPhone(user.getPhoneNumber());
+        } catch (Exception ex) {
+            responseDTO.setResponseStatus(ResponseStatus.FAILURE);
+            responseDTO.setMessage(ex.getMessage());
+        }
+        return responseDTO;
+    } */
+
+    @GetMapping("/user/get/") // Using the Get Mapping and Request Param
+    public GetUserResponseDTO getUser(@RequestParam() Long userId) {
+        GetUserResponseDTO responseDTO = new GetUserResponseDTO();
+        try {
+            User user = userService.getUser(userId);
+            responseDTO.setResponseStatus(ResponseStatus.SUCCESS);
+            responseDTO.setMessage("User Retrieved Successfully!!!");
+            responseDTO.setUserName(user.getName());
+            responseDTO.setUserId(user.getId());
+            responseDTO.setPhone(user.getPhoneNumber());
+        } catch (Exception ex) {
+            responseDTO.setResponseStatus(ResponseStatus.FAILURE);
+            responseDTO.setMessage(ex.getMessage());
+        }
+        return responseDTO;
     }
 }
