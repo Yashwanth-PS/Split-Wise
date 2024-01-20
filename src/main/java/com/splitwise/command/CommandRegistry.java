@@ -13,10 +13,10 @@ public class CommandRegistry {
     private List<Command> registeredCommand = new ArrayList<>();
 
     /* @Autowired
-    private GetUserCommand getUserCommand; // This is also possible to autowire the individual component */
+    private GetUserCommand getUserCommand; // It is also possible to autowire the Individual Component */
 
     @Autowired
-    public CommndRegistry(GetUserCommand getUserCommand, RegisterUserCommand registerUserCommand, SettleGroupCommand settleGroupCommand) {
+    public CommandRegistry(GetUserCommand getUserCommand, RegisterUserCommand registerUserCommand, SettleGroupCommand settleGroupCommand) {
         registeredCommand.add(getUserCommand);
         registeredCommand.add(registerUserCommand);
         registeredCommand.add(settleGroupCommand);
@@ -24,7 +24,7 @@ public class CommandRegistry {
 
     public void process(String input) {
         for (Command registeredCommand : registeredCommand) {
-            if (registeredCommand.canExecute(input) == true) {
+            if (registeredCommand.canExecute(input)) {
                 registeredCommand.execute(input);
                 break;
             }
