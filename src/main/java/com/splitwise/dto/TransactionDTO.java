@@ -1,18 +1,21 @@
-package com.splitwise.model;
+package com.splitwise.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
 @Getter
-// No @Entity because no table for this model since we are using it for entering the transaction
-public class Transaction{
-    private  String from;
-    private  String to;
-    private  int amount;
+@Setter
+@NoArgsConstructor // No-Args or Default Constructor
+@AllArgsConstructor // Parameterised Constructor
+public class TransactionDTO {
+    private String fromUserName;
+    private String toUserName;
+    private double amount;
 
     @Override
     public String toString() {
-        return from + " should pay " + amount + " to " + to + "\n";
+        return fromUserName + " should pay " + amount + " to " + toUserName + "\n";
     }
 }
