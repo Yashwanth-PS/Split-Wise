@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 @Entity(name = "SPLITWISE_EXPENSE")
-public class Expense extends BaseModel{
+public class Expense extends BaseModel {
     private String description;
     private double amount;
     @OneToMany

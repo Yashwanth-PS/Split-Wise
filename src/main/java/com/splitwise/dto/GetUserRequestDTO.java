@@ -6,5 +6,5 @@ import lombok.Setter;
 @Setter
 @Getter
 public class GetUserRequestDTO {
-    private  Long userId;
+    private Long userId;
 }

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @Entity(name = "SPLITWISE_GROUP")
-public class Group extends BaseModel{
+public class Group extends BaseModel {
     private String name;
     private String description;
     @ManyToMany(mappedBy = "groups")

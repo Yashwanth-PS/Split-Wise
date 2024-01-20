@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.util.Date;
+
 @Data
 @MappedSuperclass // Super Class for Every Other Class
 public class BaseModel {

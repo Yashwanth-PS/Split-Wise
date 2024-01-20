@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends BaseModel{
+public class User extends BaseModel {
     private String name;
     private String email;
     private String phoneNumber;

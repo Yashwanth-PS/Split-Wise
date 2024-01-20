@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 @Entity(name = "SPLITWISE_EXPENSEUSER")
-public class UserExpense extends BaseModel{
+public class UserExpense extends BaseModel {
     @ManyToOne
     private User user;
     private double amount;
