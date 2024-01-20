@@ -43,10 +43,10 @@ public class GetUserCommand implements Command {
         GetUserResponseDTO responseDTO = userController.getUser(userId);
         if (responseDTO.getResponseStatus() == ResponseStatus.SUCCESS) {
             log.info("User Id = " + responseDTO.getUserId());
-            log.info("User name = " + responseDTO.getUserName());
-            log.info("User phone = " + responseDTO.getPhone());
+            log.info("User Name = " + responseDTO.getUserName());
+            log.info("User Phone Number = " + responseDTO.getPhone());
         } else {
-            log.info("getUser  failed  with message= " + responseDTO.getMessage());
+            log.info("Unable to get the User: " + responseDTO.getMessage());
         }
     }
 }
