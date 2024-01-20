@@ -3,7 +3,7 @@ package com.splitwise.command;
 import com.splitwise.controller.GroupController;
 import com.splitwise.dto.SettleGroupRequestDTO;
 import com.splitwise.dto.SettleGroupResponseDTO;
-import com.splitwise.model.Transaction;
+import com.splitwise.dto.TransactionDTO;
 import com.splitwise.model.constant.ResponseStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,8 +52,8 @@ public class SettleGroupCommand implements Command {
         requestDTO.setGroupId(groupId);
         SettleGroupResponseDTO responseDTO = groupController.settleGroup(requestDTO);
         if (responseDTO.getResponseStatus() == ResponseStatus.SUCCESS) {
-            List<Transaction> transactions = responseDTO.getTransactions();
-            for (Transaction transaction : transactions) {
+            List<TransactionDTO> transactions = responseDTO.getTransactions();
+            for (TransactionDTO transaction : transactions) {
                 log.info(String.valueOf(transaction));
             }
         } else {
