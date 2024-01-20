@@ -16,6 +16,7 @@ public class User extends BaseModel{
     private String phoneNumber;
     @ManyToMany
     private List<Group> groups;
+    private String password;
 }
 
 /* User - Group : M:M -> Bidirectional

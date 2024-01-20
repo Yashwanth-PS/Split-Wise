@@ -1,6 +1,6 @@
 package com.splitwise.model;
 
-import com.Project.Splitwise.Models.Enum.Currency;
+import com.splitwise.model.constant.Currency;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
