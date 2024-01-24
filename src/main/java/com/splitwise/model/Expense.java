@@ -1,10 +1,7 @@
 package com.splitwise.model;
 
 import com.splitwise.model.constant.Currency;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
@@ -14,10 +11,12 @@ import java.util.List;
 public class Expense extends BaseModel {
     private String description;
     private double amount;
-    @OneToMany
+    @OneToMany(mappedBy = "expense") // To avoid creating an extra table
     private List<UserExpense> UserExpenses;
-    @Enumerated(EnumType.ORDINAL) // One expense will have one currency
+    @Enumerated(EnumType.STRING) // One expense will have one currency
     private Currency currency;
+    @ManyToOne // To establish the many-to-one relationship
+    private Group group;
 }
 
 /* Expense : UserExpense -> 1 : M {Uni-Directional on Expense side}

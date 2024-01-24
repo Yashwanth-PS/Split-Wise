@@ -11,14 +11,14 @@ import java.util.Date;
 @MappedSuperclass // Super Class for Every Other Class
 public class BaseModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @CreatedDate
+    /* @CreatedDate
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date createdAt;
 
     @LastModifiedDate
     @Temporal(value = TemporalType.TIMESTAMP)
-    private Date lastModifiedDate;
+    private Date lastModifiedDate; */
 }

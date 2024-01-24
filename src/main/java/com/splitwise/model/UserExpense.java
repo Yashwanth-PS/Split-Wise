@@ -13,8 +13,10 @@ public class UserExpense extends BaseModel {
     @ManyToOne
     private User user;
     private double amount;
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private UserExpenseType userExpenseType;
+    @ManyToOne // To establish the many-to-one relationship
+    private Expense expense;
 }
 
 /* User - UserExpense - 1:M -> Uni-Directional
