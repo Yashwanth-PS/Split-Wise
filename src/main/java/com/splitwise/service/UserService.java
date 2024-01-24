@@ -25,7 +25,7 @@ public class UserService {
     }
 
     public User registerUser(User user) {
-        Optional<User> savedUser = userRepository.save(user);
-        return savedUser.get();
+        User savedUser = userRepository.save(user);
+        return savedUser;
     }
 }

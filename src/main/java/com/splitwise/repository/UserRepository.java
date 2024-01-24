@@ -9,7 +9,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     @Override
-    Optional<User> save(User user);
+    User save(User user);
 
     @Override
     Optional<User> findById(Long userId);
