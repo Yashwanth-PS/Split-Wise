@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,14 +32,14 @@ public class SettleUpController {
             return ResponseEntity.ok("DONE"); // HTTP Status is 200
         } catch (Exception exception) {
             log.error("Initialization failed.", exception); // Logging the exception
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Initialization failed.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Initialization failed."); // HTTP Status is 500
         }
     }
 
-    @GetMapping("/settle")
-    public ResponseEntity<List<TransactionDTO>> settleUp() { // Response Entity --> Internally converts Object into JSON
+    @GetMapping("/settle/{groupName}")
+    public ResponseEntity<List<TransactionDTO>> settleUp(@PathVariable String groupName) { // Response Entity --> Internally converts Object into JSON
         try {
-            List<TransactionDTO> transactionDTOS = groupService.settleUp();
+            List<TransactionDTO> transactionDTOS = groupService.settleUp(groupName);
             return ResponseEntity.ok(transactionDTOS); // HTTP Status is 200
         } catch (Exception exception) {
             log.error("Settlement failed.", exception); // Logging the exception

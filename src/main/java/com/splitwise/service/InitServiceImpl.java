@@ -10,95 +10,119 @@ import com.splitwise.repository.ExpenseRepository;
 import com.splitwise.repository.GroupRepository;
 import com.splitwise.repository.UserExpenseRepository;
 import com.splitwise.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
-public class InitServiceImpl implements InitService{
+public class InitServiceImpl implements InitService {
+    private final UserRepository userRepository;
+    private final ExpenseRepository expenseRepository;
+    private final GroupRepository groupRepository;
+    private final UserExpenseRepository userExpenseRepository;
+
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private ExpenseRepository expenseRepository;
-    @Autowired
-    private GroupRepository groupRepository;
-    @Autowired
-    private UserExpenseRepository userExpenseRepository;
+    public InitServiceImpl(UserRepository userRepository, ExpenseRepository expenseRepository,
+                           GroupRepository groupRepository, UserExpenseRepository userExpenseRepository) {
+        this.userRepository = userRepository;
+        this.expenseRepository = expenseRepository;
+        this.groupRepository = groupRepository;
+        this.userExpenseRepository = userExpenseRepository;
+    }
 
     @Override
+    @Transactional
     public void initialise() {
-        Optional<User> yash = Optional.ofNullable(User.builder()
-                .email("yash@gmail.com")
-                .phoneNumber("9876543210")
-                .name("Yash")
-                .build());
-        Optional<User> nikki = Optional.ofNullable(User.builder()
-                .email("nikki@gmail.com")
-                .phoneNumber("9876543211")
-                .name("Nikki")
-                .build());
-        Optional<User> yashwa = Optional.ofNullable(User.builder()
-                .email("yashwa@gmail.com")
-                .phoneNumber("9876543212")
-                .name("Yashwa")
-                .build());
-        Optional<User> niks = Optional.ofNullable(User.builder()
-                .email("niks@gmail.com")
-                .phoneNumber("9876543213")
-                .name("Niks")
-                .build());
-        yash = userRepository.save(yash.get());
-        nikki = userRepository.save(nikki.get());
-        yashwa = userRepository.save(yashwa.get());
-        niks = userRepository.save(niks.get());
+        // Create 10 Users
+        List<User> users = IntStream.rangeClosed(1, 10)
+                .mapToObj(i -> User.builder()
+                        .email("user" + i + "@gmail.com")
+                        .phoneNumber("98765432" + i)
+                        .name("User" + i)
+                        .password("password" + i)
+                        .build())
+                .collect(Collectors.toList());
 
-        Group group = new Group();
-        group.setDescription("Friends who never pay back on time");
-        group.setName("Friends");
-        group.setUsers(List.of(yash.get(), nikki.get(), yashwa.get(), niks.get()));
+        // Save Users
+        userRepository.saveAll(users);
 
-        group = groupRepository.save(group);
+        // Create 2 Groups
+        List<Group> groups = IntStream.rangeClosed(1, 2)
+                .mapToObj(i -> {
+                    Group group = new Group();
+                    group.setName("Group" + i);
+                    group.setDescription("Description for Group" + i);
 
-        // 4 Expenses
-        // Expense 1 -> Amount - 1000, Paid By - Nikki, Has To pay - Everyone Equal
-        UserExpense userExpense = new UserExpense();
-        userExpense.setUser(nikki.get());
-        userExpense.setAmount(1000);
-        userExpense.setUserExpenseType(UserExpenseType.PAID);
-        userExpense = userExpenseRepository.save(userExpense);
+                    // Save the group before associating it with users
+                    group = groupRepository.save(group);
+                    List<User> groupUsers = users.subList((i - 1) * 5, i * 5);
+                    group.setUsers(new ArrayList<>(groupUsers));
 
-        UserExpense userExpense1 = new UserExpense();
-        userExpense1.setUser(nikki.get());
-        userExpense1.setAmount(250);
-        userExpense1.setUserExpenseType(UserExpenseType.HAS_TO_PAY);
-        userExpense1 = userExpenseRepository.save(userExpense1);
+                    // Manually set the bidirectional relationship in User entities
+                    for (User user : groupUsers) {
+                        List<Group> userGroups = user.getGroups();
+                        if (userGroups == null) {
+                            userGroups = new ArrayList<>();
+                            user.setGroups(userGroups);
+                        }
+                        userGroups.add(group);
 
-        UserExpense userExpense2 = new UserExpense();
-        userExpense2.setUser(yash.get());
-        userExpense2.setAmount(250);
-        userExpense2.setUserExpenseType(UserExpenseType.HAS_TO_PAY);
-        userExpense2 = userExpenseRepository.save(userExpense2);
+                        // Save user to update the relationship
+                        userRepository.save(user);
+                    }
+                    return group;
+                })
+                .collect(Collectors.toList());
 
-        UserExpense userExpense3 = new UserExpense();
-        userExpense3.setUser(niks.get());
-        userExpense3.setAmount(250);
-        userExpense3.setUserExpenseType(UserExpenseType.HAS_TO_PAY);
-        userExpense3 = userExpenseRepository.save(userExpense3);
+        // Save Groups (optional if you've already saved them inside the loop)
+        groupRepository.saveAll(groups);
 
-        UserExpense userExpense4 = new UserExpense();
-        userExpense4.setUser(yashwa.get());
-        userExpense4.setAmount(250);
-        userExpense4.setUserExpenseType(UserExpenseType.HAS_TO_PAY);
-        userExpense4 = userExpenseRepository.save(userExpense4);
+        // Create 4 Expenses
+        List<Expense> expenses = IntStream.rangeClosed(1, 4)
+                .mapToObj(i -> {
+                    Expense expense = new Expense();
+                    expense.setDescription("Expense" + i);
+                    expense.setAmount(100 * i);
+                    expense.setCurrency(Currency.INR);
 
-        Expense expense = new Expense();
-        expense.setAmount(1000);
-        expense.setDescription("Dinner");
-        expense.setCurrency(Currency.INR);
-        expense.setUserExpenses(List.of(userExpense, userExpense1, userExpense2, userExpense3, userExpense4));
+                    // Assign each expense to a group
+                    Group group = groups.get((i - 1) % 2);
+                    expense.setGroup(group);
 
-        expenseRepository.save(expense);
+                    // Calculate equal share for each user
+                    double equalShare = expense.getAmount() / group.getUsers().size();
+
+                    // Create UserExpense for the expense
+                    List<UserExpense> userExpenses = group.getUsers().stream()
+                            .map(user -> {
+                                UserExpense userExpense = new UserExpense();
+                                userExpense.setUser(user);
+                                userExpense.setAmount(equalShare);
+                                userExpense.setUserExpenseType((i % 2 == 0) ? UserExpenseType.PAID : UserExpenseType.HAS_TO_PAY);
+                                userExpense.setExpense(expense);
+                                return userExpense;
+                            })
+                            .collect(Collectors.toList());
+
+                    // Save UserExpenses
+                    userExpenseRepository.saveAll(userExpenses);
+
+                    // Update the total amount spent for the group
+                    group.setTotalAmountSpend(group.getTotalAmountSpend() + expense.getAmount());
+
+                    return expense;
+                })
+                .collect(Collectors.toList());
+
+        // Save Expenses
+        expenseRepository.saveAll(expenses);
+
+        // Save updated groups (optional if you want to save the groups at this point)
+        groupRepository.saveAll(groups);
     }
 }
