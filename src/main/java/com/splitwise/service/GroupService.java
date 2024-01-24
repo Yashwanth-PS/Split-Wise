@@ -1,9 +1,10 @@
 package com.splitwise.service;
 
 import com.splitwise.dto.TransactionDTO;
+import com.splitwise.model.Group;
 
 import java.util.List;
 
 public interface GroupService {
-    List<TransactionDTO> settleUp();
+    List<TransactionDTO> settleUp(String groupName);
 }
