@@ -1,11 +1,10 @@
 package com.splitwise.command;
 
 import com.splitwise.controller.UserController;
-import com.splitwise.dto.GetUserRequestDTO;
 import com.splitwise.dto.GetUserResponseDTO;
-import com.splitwise.model.constant.ResponseStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Slf4j // This is a Lombok Annotation which will generate a Logger for this class
@@ -37,16 +36,14 @@ public class GetUserCommand implements Command {
     public void execute(String input) {
         String[] arr = input.split(" ");
         long userId = Long.parseLong(arr[1]);
-        GetUserRequestDTO requestDTO = new GetUserRequestDTO();
-        requestDTO.setUserId(userId);
         // GetUserResponseDTO responseDto = userController.getUser(requestDTO); // Before using the Get Mapping and RequestParam
-        GetUserResponseDTO responseDTO = userController.getUser(userId);
-        if (responseDTO.getResponseStatus() == ResponseStatus.SUCCESS) {
-            log.info("User Id = " + responseDTO.getUserId());
-            log.info("User Name = " + responseDTO.getUserName());
-            log.info("User Phone Number = " + responseDTO.getPhone());
+        ResponseEntity<GetUserResponseDTO> responseDTO = userController.getUser(userId);
+        if (responseDTO.getStatusCode() == org.springframework.http.HttpStatus.OK) {
+            log.info("User Id = " + responseDTO.getBody().getUserId());
+            log.info("User Name = " + responseDTO.getBody().getUserName());
+            log.info("User Phone Number = " + responseDTO.getBody().getPhone());
         } else {
-            log.info("Unable to get the User: " + responseDTO.getMessage());
+            log.error("Unable to Get the User");
         }
     }
 }

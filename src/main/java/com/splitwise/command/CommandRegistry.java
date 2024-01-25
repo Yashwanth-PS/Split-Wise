@@ -11,7 +11,7 @@ public class CommandRegistry {
     private final List<Command> registeredCommand = new ArrayList<>();
 
     /* @Autowired
-    private GetUserCommand getUserCommand; // It is also possible to autowire the Individual Component */
+    private GetUserCommand getUserCommand; // Field Injection - It is also possible to autowire the Individual Component */
 
     @Autowired // Inorder to make all the commands available here, we can add the collection of all the commands
     public CommandRegistry(GetUserCommand getUserCommand, RegisterUserCommand registerUserCommand, SettleGroupCommand settleGroupCommand) {

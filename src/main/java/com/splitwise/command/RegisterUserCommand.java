@@ -3,9 +3,9 @@ package com.splitwise.command;
 import com.splitwise.controller.UserController;
 import com.splitwise.dto.RegisterUserRequestDTO;
 import com.splitwise.dto.RegisterUserResponseDTO;
-import com.splitwise.model.constant.ResponseStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -30,12 +30,12 @@ public class RegisterUserCommand implements Command {
         requestDTO.setPhone(arr[2]);
         requestDTO.setPassword(arr[3]);
 
-        RegisterUserResponseDTO responseDTO = userController.registerUser(requestDTO);
+        ResponseEntity<RegisterUserResponseDTO> responseDTO = userController.registerUser(requestDTO);
 
-        if (responseDTO.getResponseStatus() == ResponseStatus.SUCCESS) {
-            log.info("User Created with Id: " + responseDTO.getUserId());
+        if (responseDTO.getStatusCode() == org.springframework.http.HttpStatus.OK) {
+            log.info("User Created with Id: " + responseDTO.getBody().getUserName());
         } else {
-            log.info("Failed to Register the User: " + responseDTO.getMessage());
+            log.error("Failed to Register the User");
         }
     }
 }
