@@ -12,7 +12,9 @@ import org.springframework.stereotype.Component;
 @Component // Register User Command will have Controller --> Register User - name, phone, password
 public class RegisterUserCommand implements Command {
     private final UserController userController;
-    @Autowired // @Repository, @Service, @RestController, @Component - When the Application starts Spring will create a Bean
+
+    @Autowired
+    // @Repository, @Service, @RestController, @Component - When the Application starts Spring will create a Bean
     public RegisterUserCommand(UserController userController) { // The User Controller Bean would be Injected here by Spring Dependency Injection
         this.userController = userController;
     }
