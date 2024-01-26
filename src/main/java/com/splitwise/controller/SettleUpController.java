@@ -29,21 +29,22 @@ public class SettleUpController {
     public ResponseEntity<String> initialise() { // Response Entity --> Internally converts Object into JSON
         try {
             initService.initialise();
-            return ResponseEntity.ok("DONE"); // HTTP Status is 200
         } catch (Exception exception) {
             log.error("Initialization failed.", exception); // Logging the exception
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Initialization failed."); // HTTP Status is 500
         }
-    }
+        return ResponseEntity.ok("DONE"); // HTTP Status is 200
+    } // GET: http://localhost:8080/settleup/v1/init
 
     @GetMapping("/settle/{groupName}")
     public ResponseEntity<List<TransactionDTO>> settleUp(@PathVariable String groupName) { // Response Entity --> Internally converts Object into JSON
+        List<TransactionDTO> transactionDTOS;
         try {
-            List<TransactionDTO> transactionDTOS = groupService.settleUp(groupName);
-            return ResponseEntity.ok(transactionDTOS); // HTTP Status is 200
+            transactionDTOS = groupService.settleUp(groupName);
         } catch (Exception exception) {
             log.error("Settlement failed.", exception); // Logging the exception
             return ResponseEntity.notFound().build();
         }
-    }
+        return ResponseEntity.ok(transactionDTOS); // HTTP Status is 200
+    } // GET: http://localhost:8080/settleup/v1/settle/Group1
 }
