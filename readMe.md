@@ -57,3 +57,13 @@ Activity Selection -> Round Robin and Greedy Algorithm
 Command Design Pattern
 API Annotation
 One data flow end to end
+
+**5 steps to enhance the Spring Boot application:**
+- Include the Spring Boot Starter Web dependency from the Maven Repository.
+- Update the project's POM file and refresh Maven to download the necessary dependencies.
+- Modify the controller to a RestController, enabling it to handle HTTP POST and GET requests.
+- Update methods with @GetMapping or @PostMapping annotations. For example, use @PostMapping
+  for registering a user and @GetMapping for retrieving user data.
+- Understand how to retrieve data. For HTTP requests, you can utilize Request DTOs
+  (Data Transfer Objects). In HTTP, data can be sent either in the message body or as headers.
+  Use the @RequestBody annotation to handle data sent in the message body. */
