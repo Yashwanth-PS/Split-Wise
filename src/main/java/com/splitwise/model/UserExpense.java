@@ -1,11 +1,11 @@
 package com.splitwise.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.splitwise.model.constant.UserExpenseType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Data
 @Entity(name = "SPLITWISE_EXPENSEUSER")
@@ -15,7 +15,8 @@ public class UserExpense extends BaseModel {
     private double amount;
     @Enumerated(EnumType.STRING)
     private UserExpenseType userExpenseType;
-    @ManyToOne // To establish the many-to-one relationship
+    @ManyToOne(fetch = FetchType.LAZY) // To establish the many-to-one relationship
+    @JoinColumn(name = "expense_id")
     private Expense expense;
 }
 

@@ -7,8 +7,7 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @Entity(name = "SPLITWISE_GROUP")
 public class Group extends BaseModel {
     private String name;

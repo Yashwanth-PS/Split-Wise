@@ -2,14 +2,12 @@ package com.splitwise.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity(name = "SPLITWISE_USER")
 @Builder
 @NoArgsConstructor

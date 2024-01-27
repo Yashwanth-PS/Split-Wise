@@ -1,17 +1,22 @@
 package com.splitwise.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.splitwise.model.constant.Currency;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity(name = "SPLITWISE_EXPENSE")
 public class Expense extends BaseModel {
     private String description;
     private double amount;
-    @OneToMany(mappedBy = "expense") // To avoid creating an extra table
+    @OneToMany(mappedBy = "expense", fetch = FetchType.LAZY)
     private List<UserExpense> UserExpenses;
     @Enumerated(EnumType.STRING) // One expense will have one currency
     private Currency currency;
