@@ -1,7 +1,6 @@
 package com.splitwise.service;
 
 import com.splitwise.dto.TransactionDTO;
-import com.splitwise.model.Group;
 
 import java.util.List;
 

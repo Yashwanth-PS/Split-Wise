@@ -1,11 +1,11 @@
 package com.splitwise.service;
 
-import com.splitwise.model.constant.Currency;
-import com.splitwise.model.constant.UserExpenseType;
 import com.splitwise.model.Expense;
 import com.splitwise.model.Group;
 import com.splitwise.model.User;
 import com.splitwise.model.UserExpense;
+import com.splitwise.model.constant.Currency;
+import com.splitwise.model.constant.UserExpenseType;
 import com.splitwise.repository.ExpenseRepository;
 import com.splitwise.repository.GroupRepository;
 import com.splitwise.repository.UserExpenseRepository;
@@ -59,7 +59,7 @@ public class InitServiceImpl implements InitService {
                     group.setDescription("Description for Group" + i);
 
                     // Save the group before associating it with users
-                    group = groupRepository.save(group);
+                    groupRepository.save(group);
                     List<User> groupUsers = users.subList((i - 1) * 5, i * 5);
                     group.setUsers(new ArrayList<>(groupUsers));
 
@@ -87,7 +87,7 @@ public class InitServiceImpl implements InitService {
                 .mapToObj(i -> {
                     Expense expense = new Expense();
                     expense.setDescription("Expense" + i);
-                    expense.setAmount(100 * i);
+                    expense.setAmount(100 * i); // Expense amount is 100 times the iteration index
                     expense.setCurrency(Currency.INR);
 
                     // Assign each expense to a group
@@ -102,8 +102,17 @@ public class InitServiceImpl implements InitService {
                             .map(user -> {
                                 UserExpense userExpense = new UserExpense();
                                 userExpense.setUser(user);
-                                userExpense.setAmount(equalShare);
-                                userExpense.setUserExpenseType((i % 2 == 0) ? UserExpenseType.PAID : UserExpenseType.HAS_TO_PAY);
+
+                                if (user.getId() == group.getUsers().get(0).getId()) {
+                                    // One user pays the full amount
+                                    userExpense.setUserExpenseType(UserExpenseType.PAID);
+                                    userExpense.setAmount(expense.getAmount());
+                                } else {
+                                    // Others share the remaining amount equally
+                                    userExpense.setUserExpenseType(UserExpenseType.HAS_TO_PAY);
+                                    userExpense.setAmount(equalShare);
+                                }
+
                                 userExpense.setExpense(expense);
                                 return userExpense;
                             })
