@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: split-wise # Application Name
+spec:
+  replicas: 3 # Number of Instances of the application
+  selector:
+    matchLabels:
+      app: split-wise # Application Name
+  template:
+    metadata:
+      labels:
+        app: split-wise # Application Name
+    spec:
+      containers:
+        - name: split-wise # Container Name
+          image: yashwanthps/splitwise:v0.1 # image-name
+          ports:
+            - containerPort: 8080 # Port on which the application runs in the Container
