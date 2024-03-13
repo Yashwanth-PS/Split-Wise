@@ -67,3 +67,9 @@ One data flow end to end
 - Understand how to retrieve data. For HTTP requests, you can utilize Request DTOs
   (Data Transfer Objects). In HTTP, data can be sent either in the message body or as headers.
   Use the @RequestBody annotation to handle data sent in the message body. */
+
+**Docker:**
+
+- docker build -t splitwise:v0.1 .
+- docker tag splitwise:v0.1 yashwanthps/splitwise:v0.1
+- docker push yashwanthps/splitwise:v0.1     
